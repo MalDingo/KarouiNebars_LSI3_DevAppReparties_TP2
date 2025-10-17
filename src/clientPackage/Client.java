@@ -4,13 +4,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
+
 import java.io.BufferedReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
+import serialization.objet;
+import java.io.ObjectOutputStream;
+
+
 public class Client {
+	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -20,28 +25,33 @@ public class Client {
 			OutputStream os = socket.getOutputStream();
 			Scanner sc = new Scanner(System.in); 
 		    System.out.print("Entrez un nombre : ");
-		    int nb = sc.nextInt(); // la bonn
-			os.write(nb);
+		    double nb = sc.nextInt(); 
+			
 			System.out.print("Entrez un nombre2 : ");
-			int nb1=sc.nextInt();
-			os.write(nb1);
+			double nb1=sc.nextInt();
+			
 			sc.nextLine();
 			System.out.print("Entrez un operateur  : ");
-			PrintWriter pw = new PrintWriter(os,true);
-			String  oper=sc.nextLine();
-			pw.println(oper);
+			
+			String oper=sc.nextLine();
+			ObjectOutputStream oos = new ObjectOutputStream(os);
+			objet obj = new objet (nb,nb1,oper.charAt(0));
+			oos.writeObject(obj);
+		
+			//l'input 
 			InputStream is = socket.getInputStream();
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			String reponse = br.readLine();
 	        System.out.println("Résultat reçu du serveur : " + reponse);
-			sc.close();
+			//
+	        sc.close();
 			os.close();
 			socket.close();
 			} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}
